@@ -46,7 +46,7 @@ public class AccountSqlDAO implements AccountDAO {
 
 		if (results.next()) {
 
-			theAccount.equals(mapUserToAccount(results));
+			theAccount = mapUserToAccount(results);
 
 		}
 
@@ -89,7 +89,7 @@ public class AccountSqlDAO implements AccountDAO {
 	}
 
 	@Override
-	public BigDecimal decreaeBalance(int accountID, BigDecimal amtToSubtract) {
+	public BigDecimal decreaseBalance(int accountID, BigDecimal amtToSubtract) {
 		
 		Account theUpdatedAccount = getAccountByID(accountID);
 				

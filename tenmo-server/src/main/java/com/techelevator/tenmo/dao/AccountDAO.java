@@ -15,5 +15,5 @@ public interface AccountDAO {
 	
 	BigDecimal increaseBalance(int accountID, BigDecimal amtToAdd);
 	
-	BigDecimal decreaeBalance(int accountID, BigDecimal amtToSubtract);
+	BigDecimal decreaseBalance(int accountID, BigDecimal amtToSubtract);
 }
