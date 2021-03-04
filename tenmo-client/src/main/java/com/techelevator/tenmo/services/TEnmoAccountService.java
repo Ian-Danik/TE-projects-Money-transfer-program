@@ -23,18 +23,18 @@ public class TEnmoAccountService {
 		this.API_BASE_URL = url;
 		this.authenticatedUser = authenticatedUser;
 	}
-
-	public BigDecimal getBalance(int userID) throws TEnmoAccountServiceException {
-		Account theAccount = null;
+	
+	public BigDecimal getBalance() throws TEnmoAccountServiceException {
+		BigDecimal balance = BigDecimal.ZERO;
 		try {
-			theAccount = restTemplate.exchange(API_BASE_URL + "balance/" + userID, HttpMethod.GET, makeAuthEntity(), Account.class).getBody();
+			balance = restTemplate.exchange(API_BASE_URL + "balance/" + authenticatedUser.getUser().getId(), HttpMethod.GET, makeAuthEntity(), BigDecimal.class).getBody();
 		} catch (RestClientResponseException ex) {
 			
 			throw new TEnmoAccountServiceException(ex.getRawStatusCode() + " : " + ex.getResponseBodyAsString());
 			
 		}
 
-		return theAccount.getBalance();
+		return balance;
 	}
 	
 	

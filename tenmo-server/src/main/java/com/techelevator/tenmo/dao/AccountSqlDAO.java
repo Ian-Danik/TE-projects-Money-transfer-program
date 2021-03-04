@@ -6,10 +6,12 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Service;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.User;
 
+@Service 
 public class AccountSqlDAO implements AccountDAO {
 
 	private JdbcTemplate jdbcTemplate;
@@ -29,7 +31,7 @@ public class AccountSqlDAO implements AccountDAO {
 
 		while (results.next()) {
 
-			theAccounts.add(mapUserToAccount(results));
+			theAccounts.add(mapRowToAccount(results));
 		}
 
 		return theAccounts;
@@ -46,7 +48,7 @@ public class AccountSqlDAO implements AccountDAO {
 
 		if (results.next()) {
 
-			theAccount = mapUserToAccount(results);
+			theAccount = mapRowToAccount(results);
 
 		}
 
@@ -60,53 +62,49 @@ public class AccountSqlDAO implements AccountDAO {
 
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetBalance, userID);
 
-		while (results.next()) {
+		if (results.next()) {
 
-			return mapUserToAccount(results).getBalance();
+			return mapRowToAccount(results).getBalance();
 
+		} else {
+
+			return null;
 		}
-
-		return null;
 	}
 
 	@Override
 	public BigDecimal increaseBalance(int accountID, BigDecimal amtToAdd) {
-		
+
 		Account theUpdatedAccount = getAccountByID(accountID);
-		
+
 		// The variable named dadShoes refers to the term "New Balance"
-		
+
 		BigDecimal dadShoes = theUpdatedAccount.getBalance().add(amtToAdd);
-				
-		String sqlIncreaseBalance = "Update accounts "
-								  + "Set balance = ? "
-								  + "Where account_id = ?";
-		
+
+		String sqlIncreaseBalance = "Update accounts " + "Set balance = ? " + "Where account_id = ?";
+
 		jdbcTemplate.update(sqlIncreaseBalance, accountID, dadShoes);
-		
 
 		return dadShoes;
 	}
 
 	@Override
 	public BigDecimal decreaseBalance(int accountID, BigDecimal amtToSubtract) {
-		
+
 		Account theUpdatedAccount = getAccountByID(accountID);
-		
+
 		// The variable named dadShoes refers to the term "New Balance"
-				
+
 		BigDecimal dadShoes = theUpdatedAccount.getBalance().subtract(amtToSubtract);
-				
-		String sqlDecreaseBalance = "Update accounts "
-								  + "Set balance = ? "
-								  + "Where account_id = ?";
-		
+
+		String sqlDecreaseBalance = "Update accounts " + "Set balance = ? " + "Where account_id = ?";
+
 		jdbcTemplate.update(sqlDecreaseBalance, accountID, dadShoes);
-				
+
 		return dadShoes;
 	}
 
-	private Account mapUserToAccount(SqlRowSet rs) {
+	private Account mapRowToAccount(SqlRowSet rs) {
 		Account account = new Account();
 		account.setAccountID(rs.getInt("account_id"));
 		account.setUserID(rs.getInt("user_id"));

@@ -73,9 +73,10 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void viewCurrentBalance() {
 
 		TEnmoAccountService tenmoAccountService = new TEnmoAccountService(API_BASE_URL, currentUser);
-		
+	
     	try {
-			tenmoAccountService.getBalance(currentUser.getUser().getId());
+			
+			System.out.println("Your current account balance is: $" + tenmoAccountService.getBalance());
 		} catch (TEnmoAccountServiceException e) {
 			// TODO Auto-generated catch block
 			System.out.println("This account does not exist.");
