@@ -74,7 +74,7 @@ public class AccountSqlDAO implements AccountDAO {
 		
 		Account theUpdatedAccount = getAccountByID(accountID);
 		
-		
+		// The variable named dadShoes refers to the term "New Balance"
 		
 		BigDecimal dadShoes = theUpdatedAccount.getBalance().add(amtToAdd);
 				
@@ -92,6 +92,8 @@ public class AccountSqlDAO implements AccountDAO {
 	public BigDecimal decreaseBalance(int accountID, BigDecimal amtToSubtract) {
 		
 		Account theUpdatedAccount = getAccountByID(accountID);
+		
+		// The variable named dadShoes refers to the term "New Balance"
 				
 		BigDecimal dadShoes = theUpdatedAccount.getBalance().subtract(amtToSubtract);
 				
