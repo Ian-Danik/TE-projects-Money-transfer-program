@@ -67,7 +67,7 @@ public class TransfersSqlDAO implements TransfersDAO {
 			return "You can't transfer money to yourself!";
 		}
 
-		String sqlSendMoney = "Insert Into transfers(transfer_type_id, transfer_status_id, account_from, account_to, amount) "
+		String sqlSendMoney = "Insert Into transfers(transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) "
 				+ "Values(DEFAULT, 2, 2, ?, ?, ?)";
 
 		jdbcTemplate.update(sqlSendMoney, senderID, receiverID, amount);
