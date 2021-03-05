@@ -12,7 +12,7 @@ public interface TransfersDAO {
 	
 	List<Transfer> getAllTransfers(int userID);
 	
-	String sendMoney(int senderID, int receiverID, BigDecimal amount);
+	String sendMoney(Transfer newTransfer);
 	
 	Transfer getTransfer(int transferID);
 	

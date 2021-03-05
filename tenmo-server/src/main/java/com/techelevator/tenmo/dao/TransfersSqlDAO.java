@@ -61,27 +61,48 @@ public class TransfersSqlDAO implements TransfersDAO {
 		return transfers;
 	}
 
+	
 	@Override
-	public String sendMoney(int senderID, int receiverID, BigDecimal amount) {
-		if(senderID == receiverID) {
-			return "You can't transfer money to yourself!";
-		}
+	public String sendMoney(Transfer newTransfer) {
 
 		String sqlSendMoney = "Insert Into transfers(transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) "
 				+ "Values(DEFAULT, 2, 2, ?, ?, ?)";
+		newTransfer.setTransferID(getNextTransferId());
+		newTransfer.setTransferType(2);
+		newTransfer.setTransferStatus(2);
+		jdbcTemplate.update(sqlSendMoney, newTransfer.getTransferID(), newTransfer.getTransferType(),
+				newTransfer.getTransferStatus(), newTransfer.getSendingAccount(), newTransfer.getReceivingAccount());
+		newTransfer.getAmount();
 
-		jdbcTemplate.update(sqlSendMoney, senderID, receiverID, amount);
-
-		if (accountDAO.getBalance(senderID).compareTo(amount) == 1
-				|| accountDAO.getBalance(senderID).compareTo(amount) == 0) {
-			accountDAO.decreaseBalance(senderID, amount);
-			accountDAO.increaseBalance(receiverID, amount);
+		if (newTransfer.getSendingAccount() != newTransfer.getReceivingAccount()) {
+			accountDAO.decreaseBalance(newTransfer.getSendingAccount(), newTransfer.getAmount());
+			accountDAO.increaseBalance(newTransfer.getReceivingAccount(), newTransfer.getAmount());
 			return "Transfer Approved";
-		} else
+		}
 
-			return "Transfer Failed";
-
+		return "Transfer Failed";
 	}
+//	@Override
+//	public String sendMoney(int senderID, int receiverID, BigDecimal amount) {
+//		if(senderID == receiverID) {
+//			return "You can't transfer money to yourself!";
+//		}
+//
+//		String sqlSendMoney = "Insert Into transfers(transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) "
+//				+ "Values(DEFAULT, 2, 2, ?, ?, ?)";
+//
+//		jdbcTemplate.update(sqlSendMoney, senderID, receiverID, amount);
+//
+//		if (accountDAO.getBalance(senderID).compareTo(amount) == 1
+//				|| accountDAO.getBalance(senderID).compareTo(amount) == 0) {
+//			accountDAO.decreaseBalance(senderID, amount);
+//			accountDAO.increaseBalance(receiverID, amount);
+//			return "Transfer Approved";
+//		} else
+//
+//			return "Transfer Failed";
+//
+//	}
 
 	@Override
 	public Transfer getTransfer(int transferID) {
@@ -126,5 +147,14 @@ public class TransfersSqlDAO implements TransfersDAO {
 		theTransfer.setTransferStatus(rs.getInt("transfer_status_id"));
 		return theTransfer;
 		
+	}
+	
+	private int getNextTransferId() {
+		SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('seq_transfer_id')");
+		if(nextIdResult.next()) {
+			return nextIdResult.getInt(1);
+		} else {
+			throw new RuntimeException("Something went wrong while getting an id for the new transfer");
+		}
 	}
 }
