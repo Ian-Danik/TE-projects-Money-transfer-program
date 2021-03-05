@@ -6,6 +6,7 @@ import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.AuthenticationServiceException;
 import com.techelevator.tenmo.services.TEnmoAccountService;
 import com.techelevator.tenmo.services.TEnmoAccountServiceException;
+import com.techelevator.tenmo.services.TEnmoTransferService;
 import com.techelevator.view.ConsoleService;
 
 public class App {
@@ -85,7 +86,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
+		TEnmoTransferService ts = new TEnmoTransferService(API_BASE_URL, currentUser);
+		System.out.println(ts.transferList());
 		
 	}
 

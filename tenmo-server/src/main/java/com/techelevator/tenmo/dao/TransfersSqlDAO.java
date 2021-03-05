@@ -63,6 +63,9 @@ public class TransfersSqlDAO implements TransfersDAO {
 
 	@Override
 	public String sendMoney(int senderID, int receiverID, BigDecimal amount) {
+		if(senderID == receiverID) {
+			return "You can't transfer money to yourself!";
+		}
 
 		String sqlSendMoney = "Insert Into transfers(transfer_type_id, transfer_status_id, account_from, account_to, amount) "
 				+ "Values(DEFAULT, 2, 2, ?, ?, ?)";
@@ -85,17 +88,21 @@ public class TransfersSqlDAO implements TransfersDAO {
 
 		Transfer theTransfer = null;
 		
-		String sqlGetTransfer = "SELECT t.*, u.username AS sender_name, "
-							  + "v.username AS receiver_name FROM transfers t "
-							  + "JOIN accounts a ON t.account_from = a.account_id "
-							  + "JOIN accounts b ON t.account_to = b.account_id "
-							  + "JOIN users u ON a.user_id = u.user_id "
-							  + "JOIN users v ON b.user_id = v.user_id "
-							  + ""
-							  + "Where transfer_id = ?";
+		String sqlTransfer = "SELECT t.*, u.username AS sender_name, v.username AS receiver_name, ts.transfer_status_desc, tt.transfer_type_desc FROM transfers t " + 
+				"JOIN accounts a ON t.account_from = a.account_id " + 
+				"JOIN accounts b ON t.account_to = b.account_id " + 
+				"JOIN users u ON a.user_id = u.user_id " + 
+				"JOIN users v ON b.user_id = v.user_id " + 
+				"JOIN transfer_statuses ts ON t.transfer_status_id = ts.transfer_status_id " + 
+				"JOIN transfer_types tt ON t.transfer_type_id = tt.transfer_type_id " + 
+				"WHERE t.transfer_id = ?";
 		
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlTransfer, transferID);
+		if(results.next()) {
+			theTransfer = mapRowToTransfers(results);
+		}
 		
-		return null;
+		return theTransfer;
 	}
 
 	private User mapRowToUsers(SqlRowSet rs) {
