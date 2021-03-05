@@ -81,13 +81,13 @@ public class TransferSqlDAOTest {
 		Assert.assertEquals(69, testObj.get(0).getSendingAccount());
 	}
 	
-	@Test
-	public void sendMoney_sends_money_and_reduces_balances() {
-		
-		BigDecimal testAmount = BigDecimal.valueOf(1000);
-		
-		String results = transfersDAO.sendMoney(69, 3, testAmount);
-		
-		Assert.assertEquals("Transfer Approved", results);
-	}
+//	@Test
+//	public void sendMoney_sends_money_and_reduces_balances() {
+//		
+//		BigDecimal testAmount = BigDecimal.valueOf(1000);
+//		
+//		String results = transfersDAO.sendMoney(69, 3, testAmount);
+//		
+//		Assert.assertEquals("Transfer Approved", results);
+//	}
 }
