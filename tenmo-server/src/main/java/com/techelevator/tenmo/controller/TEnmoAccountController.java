@@ -22,7 +22,7 @@ public class TEnmoAccountController {
 		
 	}
 
-	@PreAuthorize("permitAll")
+	
 	@RequestMapping(path = "balance/{id}", method = RequestMethod.GET)
 	public BigDecimal getBalance(@PathVariable int id) {
 		return accountDAO.getBalance(id);

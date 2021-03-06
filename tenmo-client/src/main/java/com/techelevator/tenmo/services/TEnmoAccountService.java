@@ -41,7 +41,7 @@ public class TEnmoAccountService {
 	
 	 private HttpEntity makeAuthEntity() {
 	        HttpHeaders headers = new HttpHeaders();
-	        headers.setBearerAuth(AUTH_TOKEN);
+	        headers.setBearerAuth(authenticatedUser.getToken());
 	        HttpEntity entity = new HttpEntity<>(headers);
 	        return entity;
 	    }
