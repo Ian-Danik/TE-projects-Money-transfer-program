@@ -12,7 +12,7 @@ public interface TransfersDAO {
 	
 	List<Transfer> getAllTransfers(int userID);
 	
-	String sendMoney(Transfer newTransfer);
+	int createTransfer(Transfer newTransfer);
 	
 	Transfer getTransfer(int transferID);
 	
