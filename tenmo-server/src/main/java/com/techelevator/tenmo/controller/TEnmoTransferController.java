@@ -39,6 +39,7 @@ public class TEnmoTransferController {
 	@RequestMapping(path = "transfers/{id}", method = RequestMethod.GET)
 	public Transfer getSelectedTransfer(@PathVariable int id) {
 		Transfer transfer = transferDAO.getTransfer(id);
+		transfer.setStatusName("Approved");
 		return transfer;
 	}
 	
