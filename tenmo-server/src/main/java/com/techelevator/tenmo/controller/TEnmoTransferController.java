@@ -21,11 +21,13 @@ import com.techelevator.tenmo.model.User;
 public class TEnmoTransferController {
 
 	private TransfersDAO transferDAO;
+	private AccountDAO accountDAO;
 	private UserDAO userDAO;
 
-	public TEnmoTransferController(TransfersDAO transferDAO, UserDAO userDAO) {
+	public TEnmoTransferController(TransfersDAO transferDAO, UserDAO userDAO, AccountDAO accountDAO) {
 		this.transferDAO = transferDAO;
 		this.userDAO = userDAO;
+		this.accountDAO = accountDAO;
 	}
 
 	@RequestMapping(path = "account/transfers/{id}", method = RequestMethod.GET)
@@ -42,8 +44,18 @@ public class TEnmoTransferController {
 	
 	@RequestMapping(path = "transfer", method = RequestMethod.POST)
 	public String sendTransfer(@RequestBody Transfer transfer) {
-		String results = transferDAO.sendMoney(transfer);
-		return results;
+		String string = "";
+		if (transfer.getReceivingAccount() != transfer.getSendingAccount()) {
+
+			accountDAO.decreaseBalance(transfer.getSendingAccount(), transfer.getAmount());
+			accountDAO.increaseBalance(transfer.getReceivingAccount(), transfer.getAmount());
+			int results = transferDAO.createTransfer(transfer);
+			if (results == 1) {
+				string = "Transfer Approved";
+			} else
+				string = "Transfer Failed";
+		}
+		return string;
 	}
 
 	@RequestMapping(path = "listusers", method = RequestMethod.GET)

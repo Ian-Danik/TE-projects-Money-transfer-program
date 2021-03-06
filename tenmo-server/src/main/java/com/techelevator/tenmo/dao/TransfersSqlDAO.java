@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 
@@ -60,49 +61,19 @@ public class TransfersSqlDAO implements TransfersDAO {
 		
 		return transfers;
 	}
-
 	
 	@Override
-	public String sendMoney(Transfer newTransfer) {
+	public int createTransfer(Transfer newTransfer) {
 
 		String sqlSendMoney = "Insert Into transfers(transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) "
 				+ "Values(DEFAULT, 2, 2, ?, ?, ?)";
 		newTransfer.setTransferID(getNextTransferId());
 		newTransfer.setTransferType(2);
 		newTransfer.setTransferStatus(2);
-		jdbcTemplate.update(sqlSendMoney, newTransfer.getTransferID(), newTransfer.getTransferType(),
-				newTransfer.getTransferStatus(), newTransfer.getSendingAccount(), newTransfer.getReceivingAccount());
-		newTransfer.getAmount();
+		int results =jdbcTemplate.update(sqlSendMoney, newTransfer.getSendingAccount(), newTransfer.getReceivingAccount(), newTransfer.getAmount());
 
-		if (newTransfer.getSendingAccount() != newTransfer.getReceivingAccount()) {
-			accountDAO.decreaseBalance(newTransfer.getSendingAccount(), newTransfer.getAmount());
-			accountDAO.increaseBalance(newTransfer.getReceivingAccount(), newTransfer.getAmount());
-			return "Transfer Approved";
-		}
-
-		return "Transfer Failed";
+		return results;
 	}
-//	@Override
-//	public String sendMoney(int senderID, int receiverID, BigDecimal amount) {
-//		if(senderID == receiverID) {
-//			return "You can't transfer money to yourself!";
-//		}
-//
-//		String sqlSendMoney = "Insert Into transfers(transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) "
-//				+ "Values(DEFAULT, 2, 2, ?, ?, ?)";
-//
-//		jdbcTemplate.update(sqlSendMoney, senderID, receiverID, amount);
-//
-//		if (accountDAO.getBalance(senderID).compareTo(amount) == 1
-//				|| accountDAO.getBalance(senderID).compareTo(amount) == 0) {
-//			accountDAO.decreaseBalance(senderID, amount);
-//			accountDAO.increaseBalance(receiverID, amount);
-//			return "Transfer Approved";
-//		} else
-//
-//			return "Transfer Failed";
-//
-//	}
 
 	@Override
 	public Transfer getTransfer(int transferID) {
