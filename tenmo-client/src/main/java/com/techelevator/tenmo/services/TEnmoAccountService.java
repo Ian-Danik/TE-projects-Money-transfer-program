@@ -16,7 +16,7 @@ public class TEnmoAccountService {
 	public RestTemplate restTemplate = new RestTemplate();
 	private AuthenticatedUser authenticatedUser;
 	private final String API_BASE_URL;
-	public static String AUTH_TOKEN = "";
+//	public static String AUTH_TOKEN = "";
 
 	public TEnmoAccountService(String url, AuthenticatedUser authenticatedUser) {
 

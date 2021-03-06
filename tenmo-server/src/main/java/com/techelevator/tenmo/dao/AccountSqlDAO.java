@@ -83,7 +83,7 @@ public class AccountSqlDAO implements AccountDAO {
 
 		String sqlIncreaseBalance = "Update accounts " + "Set balance = ? " + "Where account_id = ?";
 
-		jdbcTemplate.update(sqlIncreaseBalance, accountID, dadShoes);
+		jdbcTemplate.update(sqlIncreaseBalance, dadShoes, accountID);
 
 		return dadShoes;
 	}
@@ -99,7 +99,7 @@ public class AccountSqlDAO implements AccountDAO {
 
 		String sqlDecreaseBalance = "Update accounts " + "Set balance = ? " + "Where account_id = ?";
 
-		jdbcTemplate.update(sqlDecreaseBalance, accountID, dadShoes);
+		jdbcTemplate.update(sqlDecreaseBalance, dadShoes, accountID);
 
 		return dadShoes;
 	}

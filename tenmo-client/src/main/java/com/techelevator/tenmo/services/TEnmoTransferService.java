@@ -29,23 +29,69 @@ public class TEnmoTransferService {
 
 	}
 
-	public Transfer[] transferList() {
+	public void transferList() {
 		Transfer[] output = null;
-
 		String path = API_BASE_URL + "account/transfers/" + authenticatedUser.getUser().getId();
-
 		try {
 			output = restTemplate.exchange(path, HttpMethod.GET, makeAuthEntity(), Transfer[].class).getBody();
 		} catch (Exception e) {
 			System.out.println("Service fail");
 		}
-
 		System.out.println("-------------------------------------------\r\n" + "Transfers\r\n"
-				+ "ID          From/To                 Amount\r\n" + "-------------------------------------------\r\n");
-
-		return output;
-
+				+ "ID     From/To         Amount\r\n" + "-------------------------------------------\r\n");
+		String fromOrTo = "";
+		String transferName = "";
+		for (Transfer transfer : output) {
+			if (authenticatedUser.getUser().getId() == transfer.getSendingAccount()) {
+				fromOrTo = "From: ";
+				transferName = transfer.getSenderName();
+			} else {
+				fromOrTo = "To: ";
+				transferName = transfer.getReceiverName();
+			}
+			System.out.println(
+					transfer.getTransferID() + "\t\t" + fromOrTo + transferName + "\t\t$" + transfer.getAmount());
+		}
+		System.out.println("------------------\r\n " + "Please enter transfer ID to view details (0 to cancel): ");
+		Scanner scn = new Scanner(System.in);
+		String input = scn.nextLine();
+		if (Integer.parseInt(input) != 0) {
+			boolean foundTransfer = false;
+			for (Transfer i : output) {
+				if (Integer.parseInt(input) == i.getTransferID()) {
+					foundTransfer = true;
+					Transfer tempTransfer = restTemplate
+							.exchange(API_BASE_URL + "transfers/" + i.getTransferID(), HttpMethod.GET, makeAuthEntity(), Transfer.class).getBody();
+					System.out.println("-------------------------------------------\r\n" + "\"Transfer Details\\r\\n\""
+							+ "\"-------------------------------------------\\r\\n" + "Id: "
+							+ tempTransfer.getTransferID() + "\r\n" + "From: " + tempTransfer.getSenderName() + "\r\n"
+							+ "To: " + tempTransfer.getReceiverName() + "\r\n" + "Status: "
+							+ tempTransfer.getStatusName() + "\r\n" + "Amount: $" + tempTransfer.getAmount());
+				}
+			}
+			if (!foundTransfer) {
+				System.out.println("Not a valid transfer ID please Try again");
+			}
+		}
 	}
+	
+//	public Transfer[] transferList() {
+//		Transfer[] output = null;
+//
+//		String path = API_BASE_URL + "account/transfers/" + authenticatedUser.getUser().getId();
+//
+//		try {
+//			output = restTemplate.exchange(path, HttpMethod.GET, makeAuthEntity(), Transfer[].class).getBody();
+//		} catch (Exception e) {
+//			System.out.println("Service fail");
+//		}
+//
+//		System.out.println("-------------------------------------------\r\n" + "Transfers\r\n"
+//				+ "ID          From/To                 Amount\r\n" + "-------------------------------------------\r\n");
+//
+//		return output;
+//
+//	}
 
 	public void sendMoney() {
 		User[] usersToSend = null;

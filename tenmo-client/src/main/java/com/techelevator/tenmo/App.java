@@ -87,7 +87,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void viewTransferHistory() {
 		TEnmoTransferService ts = new TEnmoTransferService(API_BASE_URL, currentUser);
-		System.out.println(ts.transferList());
+		ts.transferList();
 		
 	}
 
@@ -97,7 +97,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
+		TEnmoTransferService ts = new TEnmoTransferService(API_BASE_URL, currentUser);
+		ts.sendMoney();
 		
 	}
 
