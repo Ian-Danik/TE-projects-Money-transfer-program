@@ -61,9 +61,10 @@ public class TEnmoTransferService {
 				if (Integer.parseInt(input) == i.getTransferID()) {
 					foundTransfer = true;
 					Transfer tempTransfer = restTemplate
-							.exchange(API_BASE_URL + "transfers/" + i.getTransferID(), HttpMethod.GET, makeAuthEntity(), Transfer.class).getBody();
-					System.out.println("-------------------------------------------\r\n" + "\"Transfer Details\\r\\n\""
-							+ "\"-------------------------------------------\\r\\n" + "Id: "
+							.exchange(API_BASE_URL + "transfers/" +  i.getTransferID(), HttpMethod.GET, makeAuthEntity(), Transfer.class).getBody();
+					System.out.println("-------------------------------------------\r\n"
+							+ "Transfer Details" + "\r\n"
+							+ "-------------------------------------------\r\n" + "Id: "
 							+ tempTransfer.getTransferID() + "\r\n" + "From: " + tempTransfer.getSenderName() + "\r\n"
 							+ "To: " + tempTransfer.getReceiverName() + "\r\n" + "Status: "
 							+ tempTransfer.getStatusName() + "\r\n" + "Amount: $" + tempTransfer.getAmount());
